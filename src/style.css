@@ -1,0 +1,155 @@
+/* Reset and Base Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f8f9fa;
+  min-height: 100vh;
+}
+
+/* Gallery Grid Styles */
+.photo-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  background: white;
+}
+
+.photo-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.photo-card img {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  display: block;
+}
+
+.photo-info {
+  padding: 12px;
+}
+
+.photo-author {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin-bottom: 8px;
+}
+
+.photo-likes {
+  font-size: 0.85rem;
+  color: #dc3545;
+}
+
+/* Favorite Button */
+.favorite-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 10;
+}
+
+.favorite-btn:hover {
+  transform: scale(1.1);
+}
+
+.favorite-btn.favorited {
+  background: rgba(220, 53, 69, 0.9);
+  color: white;
+}
+
+/* Modal Styles */
+#photoModal .modal-body img {
+  max-height: 70vh;
+  width: auto;
+  max-width: 100%;
+}
+
+/* Tabs Styles */
+.nav-tabs .nav-link {
+  cursor: pointer;
+  color: #495057;
+}
+
+.nav-tabs .nav-link.active {
+  font-weight: bold;
+}
+
+/* Loading State */
+#loadingSpinner {
+  padding: 40px 0;
+}
+
+/* Error Alert */
+#errorAlert {
+  margin-top: 20px;
+}
+
+/* Search Form */
+#searchForm {
+  gap: 10px;
+}
+
+#searchForm .form-control {
+  flex: 1;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .photo-card img {
+    height: 250px;
+  }
+
+  #searchForm {
+    flex-direction: column;
+  }
+
+  #searchForm button {
+    width: 100%;
+  }
+}
+
+/* Animation for new photos */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.photo-card {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6c757d;
+}
+
+.empty-state i {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  display: block;
+}
