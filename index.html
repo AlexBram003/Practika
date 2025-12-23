@@ -64,9 +64,12 @@
       <!-- Photo Gallery Grid -->
       <div id="photoGallery" class="row row-cols-1 row-cols-md-3 g-4"></div>
 
-      <!-- Load More Button -->
+      <!-- Infinite Scroll Info & Load More Button -->
       <div class="text-center my-4">
-        <button id="loadMoreBtn" class="btn btn-outline-primary d-none">
+        <p class="text-muted small" id="scrollHint">
+          <i>Прокручуйте вниз для автоматичного завантаження фото</i> ⬇️
+        </p>
+        <button id="loadMoreBtn" class="btn btn-outline-primary btn-sm d-none">
           Завантажити ще
         </button>
       </div>

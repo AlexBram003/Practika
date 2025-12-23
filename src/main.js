@@ -25,6 +25,7 @@ const elements = {
   loadingSpinner: document.getElementById('loadingSpinner'),
   errorAlert: document.getElementById('errorAlert'),
   loadMoreBtn: document.getElementById('loadMoreBtn'),
+  scrollHint: document.getElementById('scrollHint'),
   allTab: document.getElementById('all-tab'),
   favoritesTab: document.getElementById('favorites-tab'),
   favoritesCount: document.getElementById('favoritesCount'),
@@ -183,6 +184,7 @@ function displayPhotos(photos, append = false) {
       </div>
     `
     elements.loadMoreBtn.classList.add('d-none')
+    elements.scrollHint.classList.add('d-none')
     return
   }
 
@@ -192,11 +194,13 @@ function displayPhotos(photos, append = false) {
     elements.photoGallery.appendChild(photoCard)
   })
 
-  // Показати кнопку "Завантажити ще" тільки для вкладки "Всі фото"
+  // Показати підказку та кнопку тільки для вкладки "Всі фото"
   if (state.currentTab === 'all') {
     elements.loadMoreBtn.classList.remove('d-none')
+    elements.scrollHint.classList.remove('d-none')
   } else {
     elements.loadMoreBtn.classList.add('d-none')
+    elements.scrollHint.classList.add('d-none')
   }
 }
 
@@ -304,11 +308,48 @@ elements.photoGallery.addEventListener('click', (e) => {
 
 // Кнопка "Завантажити ще" (пагінація)
 elements.loadMoreBtn.addEventListener('click', async () => {
+  await loadMorePhotos()
+})
+
+// Функція для завантаження додаткових фото
+async function loadMorePhotos() {
+  if (state.isLoading || state.currentTab !== 'all') return
+
   state.currentPage++
   const photos = await fetchPhotos(state.currentQuery, state.currentPage)
   state.photos = [...state.photos, ...photos]
   displayPhotos(photos, true)
-})
+}
+
+// ========== НЕСКІНЧЕННИЙ СКРОЛ ==========
+
+// Перевірка, чи користувач досяг низу сторінки
+function isBottomReached() {
+  const scrollTop = window.pageYOffset || document.documentElement.scrollTop
+  const scrollHeight = document.documentElement.scrollHeight
+  const clientHeight = document.documentElement.clientHeight
+
+  // Завантажуємо, коли користувач за 300px до низу
+  return scrollTop + clientHeight >= scrollHeight - 300
+}
+
+// Дебаунсинг для оптимізації
+let scrollTimeout
+function handleScroll() {
+  // Очищуємо попередній таймер
+  clearTimeout(scrollTimeout)
+
+  // Встановлюємо новий таймер
+  scrollTimeout = setTimeout(async () => {
+    // Перевіряємо умови для завантаження
+    if (isBottomReached() && state.currentTab === 'all' && !state.isLoading) {
+      await loadMorePhotos()
+    }
+  }, 200) // Затримка 200мс
+}
+
+// Додаємо обробник події scroll
+window.addEventListener('scroll', handleScroll)
 
 // Перемикання вкладок
 elements.allTab.addEventListener('click', async () => {
