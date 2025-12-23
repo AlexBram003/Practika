@@ -5,7 +5,7 @@ import * as bootstrap from 'bootstrap'
 import axios from 'axios'
 
 // Конфігурація Unsplash API
-const UNSPLASH_ACCESS_KEY = 'YOUR_ACCESS_KEY_HERE'
+const UNSPLASH_ACCESS_KEY = 'EyuRTN2cUCiVfSzRT9Us4oc-kHgYsSuqrFrzqvNDumk'
 const UNSPLASH_API_URL = 'https://api.unsplash.com'
 
 // Стан застосунку
