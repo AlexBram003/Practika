@@ -5,5 +5,6 @@ export const state = {
   photos: [],
   currentTab: 'all',
   isLoading: false,
-  loadingMode: 'infinite' // 'infinite' або 'pagination'
+  loadingMode: 'infinite', // 'pagination' | 'loadMore' | 'infinite'
+  totalPages: 10 // Приблизна кількість сторінок (для пагінації)
 }

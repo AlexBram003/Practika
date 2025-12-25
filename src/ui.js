@@ -54,16 +54,29 @@ export function displayPhotos(photos, append = false) {
     elements.photoGallery.appendChild(photoCard)
   })
 
-  // Показати підказку або кнопку залежно від режиму та вкладки
+  // Показати відповідні елементи залежно від режиму та вкладки
   if (state.currentTab === 'all') {
-    if (state.loadingMode === 'infinite') {
-      elements.scrollHint.classList.remove('d-none')
-      elements.loadMoreBtn.classList.add('d-none')
-    } else {
-      elements.scrollHint.classList.add('d-none')
-      elements.loadMoreBtn.classList.remove('d-none')
+    switch (state.loadingMode) {
+      case 'pagination':
+        elements.paginationContainer.classList.remove('d-none')
+        elements.loadMoreBtn.classList.add('d-none')
+        elements.scrollHint.classList.add('d-none')
+        renderPagination(state.currentPage, state.totalPages)
+        break
+      case 'loadMore':
+        elements.paginationContainer.classList.add('d-none')
+        elements.loadMoreBtn.classList.remove('d-none')
+        elements.scrollHint.classList.add('d-none')
+        break
+      case 'infinite':
+        elements.paginationContainer.classList.add('d-none')
+        elements.loadMoreBtn.classList.add('d-none')
+        elements.scrollHint.classList.remove('d-none')
+        break
     }
   } else {
+    // Для вкладки "Улюблені" приховати всі елементи завантаження
+    elements.paginationContainer.classList.add('d-none')
     elements.loadMoreBtn.classList.add('d-none')
     elements.scrollHint.classList.add('d-none')
   }
@@ -112,4 +125,80 @@ export function showError(message) {
 // Сховати повідомлення про помилку
 export function hideError() {
   elements.errorAlert.classList.add('d-none')
+}
+
+// Створити HTML пагінації
+export function renderPagination(currentPage, totalPages) {
+  elements.paginationNav.innerHTML = ''
+
+  const maxVisiblePages = 5
+  let startPage = Math.max(1, currentPage - 2)
+  let endPage = Math.min(totalPages, currentPage + 2)
+
+  // Коригування діапазону
+  if (endPage - startPage < maxVisiblePages - 1) {
+    if (startPage === 1) {
+      endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
+    } else if (endPage === totalPages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1)
+    }
+  }
+
+  // Кнопка "Попередня"
+  const prevLi = document.createElement('li')
+  prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`
+  prevLi.innerHTML = `
+    <button class="page-link" data-page="${currentPage - 1}" ${currentPage === 1 ? 'disabled' : ''}>
+      Попередня
+    </button>
+  `
+  elements.paginationNav.appendChild(prevLi)
+
+  // Перша сторінка
+  if (startPage > 1) {
+    const firstLi = document.createElement('li')
+    firstLi.className = 'page-item'
+    firstLi.innerHTML = `<button class="page-link" data-page="1">1</button>`
+    elements.paginationNav.appendChild(firstLi)
+
+    if (startPage > 2) {
+      const dotsLi = document.createElement('li')
+      dotsLi.className = 'page-item disabled'
+      dotsLi.innerHTML = `<span class="page-link">...</span>`
+      elements.paginationNav.appendChild(dotsLi)
+    }
+  }
+
+  // Сторінки
+  for (let i = startPage; i <= endPage; i++) {
+    const li = document.createElement('li')
+    li.className = `page-item ${i === currentPage ? 'active' : ''}`
+    li.innerHTML = `<button class="page-link" data-page="${i}">${i}</button>`
+    elements.paginationNav.appendChild(li)
+  }
+
+  // Остання сторінка
+  if (endPage < totalPages) {
+    if (endPage < totalPages - 1) {
+      const dotsLi = document.createElement('li')
+      dotsLi.className = 'page-item disabled'
+      dotsLi.innerHTML = `<span class="page-link">...</span>`
+      elements.paginationNav.appendChild(dotsLi)
+    }
+
+    const lastLi = document.createElement('li')
+    lastLi.className = 'page-item'
+    lastLi.innerHTML = `<button class="page-link" data-page="${totalPages}">${totalPages}</button>`
+    elements.paginationNav.appendChild(lastLi)
+  }
+
+  // Кнопка "Наступна"
+  const nextLi = document.createElement('li')
+  nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`
+  nextLi.innerHTML = `
+    <button class="page-link" data-page="${currentPage + 1}" ${currentPage === totalPages ? 'disabled' : ''}>
+      Наступна
+    </button>
+  `
+  elements.paginationNav.appendChild(nextLi)
 }

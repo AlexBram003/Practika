@@ -21,5 +21,8 @@ export const elements = {
   // Нові елементи
   categoryButtons: document.querySelectorAll('.category-btn'),
   paginationModeBtn: document.getElementById('paginationMode'),
-  infiniteScrollModeBtn: document.getElementById('infiniteScrollMode')
+  loadMoreModeBtn: document.getElementById('loadMoreMode'),
+  infiniteScrollModeBtn: document.getElementById('infiniteScrollMode'),
+  paginationContainer: document.getElementById('paginationContainer'),
+  paginationNav: document.getElementById('paginationNav')
 }

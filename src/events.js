@@ -65,9 +65,10 @@ export function setupGalleryClick() {
   })
 }
 
-// Функція для завантаження додаткових фото
+// Функція для завантаження додаткових фото (для loadMore та infinite)
 export async function loadMorePhotos() {
   if (state.isLoading || state.currentTab !== 'all') return
+  if (state.loadingMode === 'pagination') return // Пагінація використовує окрему логіку
 
   state.currentPage++
   const photos = await fetchPhotos(state.currentQuery, state.currentPage)
@@ -175,14 +176,24 @@ export function setupCategories() {
 
 // Оновити видимість елементів залежно від режиму
 function updateLoadingModeUI() {
-  if (state.loadingMode === 'infinite') {
-    elements.scrollHint.classList.remove('d-none')
-    elements.loadMoreBtn.classList.add('d-none')
-  } else {
-    elements.scrollHint.classList.add('d-none')
-    if (state.currentTab === 'all') {
+  if (state.currentTab !== 'all') return
+
+  switch (state.loadingMode) {
+    case 'pagination':
+      elements.paginationContainer.classList.remove('d-none')
+      elements.loadMoreBtn.classList.add('d-none')
+      elements.scrollHint.classList.add('d-none')
+      break
+    case 'loadMore':
+      elements.paginationContainer.classList.add('d-none')
       elements.loadMoreBtn.classList.remove('d-none')
-    }
+      elements.scrollHint.classList.add('d-none')
+      break
+    case 'infinite':
+      elements.paginationContainer.classList.add('d-none')
+      elements.loadMoreBtn.classList.add('d-none')
+      elements.scrollHint.classList.remove('d-none')
+      break
   }
 }
 
@@ -191,6 +202,15 @@ export function setupLoadingModeToggle() {
   elements.paginationModeBtn.addEventListener('change', () => {
     if (elements.paginationModeBtn.checked) {
       state.loadingMode = 'pagination'
+      // При переході на пагінацію - завантажити поточну сторінку
+      loadPagePhotos(state.currentPage)
+      updateLoadingModeUI()
+    }
+  })
+
+  elements.loadMoreModeBtn.addEventListener('change', () => {
+    if (elements.loadMoreModeBtn.checked) {
+      state.loadingMode = 'loadMore'
       updateLoadingModeUI()
     }
   })
@@ -199,6 +219,27 @@ export function setupLoadingModeToggle() {
     if (elements.infiniteScrollModeBtn.checked) {
       state.loadingMode = 'infinite'
       updateLoadingModeUI()
+    }
+  })
+}
+
+// Завантажити конкретну сторінку (для пагінації)
+async function loadPagePhotos(page) {
+  state.currentPage = page
+  const photos = await fetchPhotos(state.currentQuery, page)
+  state.photos = photos
+  displayPhotos(photos)
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+// Обробка кліків на пагінацію
+export function setupPaginationClick() {
+  elements.paginationNav.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('page-link')) {
+      const page = parseInt(e.target.dataset.page)
+      if (page && !isNaN(page)) {
+        await loadPagePhotos(page)
+      }
     }
   })
 }
@@ -212,4 +253,5 @@ export function setupEventHandlers() {
   setupTabs()
   setupCategories()
   setupLoadingModeToggle()
+  setupPaginationClick()
 }

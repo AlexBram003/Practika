@@ -69,10 +69,13 @@
           </li>
         </ul>
 
-        <!-- Режим завантаження: Пагінація / Infinite Scroll -->
+        <!-- Режим завантаження: Пагінація / Load More / Infinite Scroll -->
         <div class="btn-group btn-group-sm" role="group" aria-label="Loading mode">
           <input type="radio" class="btn-check" name="loadingMode" id="paginationMode" autocomplete="off">
           <label class="btn btn-outline-secondary" for="paginationMode">📄 Пагінація</label>
+
+          <input type="radio" class="btn-check" name="loadingMode" id="loadMoreMode" autocomplete="off">
+          <label class="btn btn-outline-secondary" for="loadMoreMode">➕ Завантажити більше</label>
 
           <input type="radio" class="btn-check" name="loadingMode" id="infiniteScrollMode" autocomplete="off" checked>
           <label class="btn btn-outline-secondary" for="infiniteScrollMode">∞ Infinite Scroll</label>
@@ -92,13 +95,20 @@
       <!-- Photo Gallery Grid -->
       <div id="photoGallery" class="row row-cols-1 row-cols-md-3 g-4"></div>
 
+      <!-- Pagination Controls -->
+      <nav id="paginationContainer" class="d-none" aria-label="Photo pagination">
+        <ul class="pagination justify-content-center my-4" id="paginationNav">
+          <!-- Pagination buttons will be inserted here dynamically -->
+        </ul>
+      </nav>
+
       <!-- Infinite Scroll Info & Load More Button -->
       <div class="text-center my-4">
-        <p class="text-muted small" id="scrollHint">
+        <p class="text-muted small d-none" id="scrollHint">
           <i>Прокручуйте вниз для автоматичного завантаження фото</i> ⬇️
         </p>
         <button id="loadMoreBtn" class="btn btn-outline-primary btn-sm d-none">
-          Завантажити ще
+          Завантажити більше
         </button>
       </div>
     </div>
