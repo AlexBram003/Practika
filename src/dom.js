@@ -17,5 +17,9 @@ export const elements = {
   modalPhotoTitle: document.getElementById('modalPhotoTitle'),
   modalPhotoDescription: document.getElementById('modalPhotoDescription'),
   modalPhotoAuthor: document.getElementById('modalPhotoAuthor'),
-  downloadPhotoBtn: document.getElementById('downloadPhotoBtn')
+  downloadPhotoBtn: document.getElementById('downloadPhotoBtn'),
+  // Нові елементи
+  categoryButtons: document.querySelectorAll('.category-btn'),
+  paginationModeBtn: document.getElementById('paginationMode'),
+  infiniteScrollModeBtn: document.getElementById('infiniteScrollMode')
 }

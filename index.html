@@ -39,17 +39,45 @@
         </div>
       </div>
 
-      <!-- Tabs для улюблених фото -->
-      <ul class="nav nav-tabs mb-3" id="galleryTabs">
-        <li class="nav-item">
-          <button class="nav-link active" id="all-tab" data-tab="all">Всі фото</button>
-        </li>
-        <li class="nav-item">
-          <button class="nav-link" id="favorites-tab" data-tab="favorites">
-            ❤️ Улюблені (<span id="favoritesCount">0</span>)
-          </button>
-        </li>
-      </ul>
+      <!-- Categories Navigation -->
+      <div class="categories-nav mb-3">
+        <div class="categories-scroll">
+          <button class="category-btn active" data-category="nature">Featured</button>
+          <button class="category-btn" data-category="wallpapers">Wallpapers</button>
+          <button class="category-btn" data-category="3d">3D Renders</button>
+          <button class="category-btn" data-category="nature">Nature</button>
+          <button class="category-btn" data-category="textures">Textures</button>
+          <button class="category-btn" data-category="film">Film</button>
+          <button class="category-btn" data-category="architecture">Architecture</button>
+          <button class="category-btn" data-category="street">Street Photography</button>
+          <button class="category-btn" data-category="experimental">Experimental</button>
+          <button class="category-btn" data-category="travel">Travel</button>
+          <button class="category-btn" data-category="people">People</button>
+        </div>
+      </div>
+
+      <!-- Tabs для улюблених фото та перемикач режиму -->
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <ul class="nav nav-tabs border-0 mb-0" id="galleryTabs">
+          <li class="nav-item">
+            <button class="nav-link active" id="all-tab" data-tab="all">Всі фото</button>
+          </li>
+          <li class="nav-item">
+            <button class="nav-link" id="favorites-tab" data-tab="favorites">
+              ❤️ Улюблені (<span id="favoritesCount">0</span>)
+            </button>
+          </li>
+        </ul>
+
+        <!-- Режим завантаження: Пагінація / Infinite Scroll -->
+        <div class="btn-group btn-group-sm" role="group" aria-label="Loading mode">
+          <input type="radio" class="btn-check" name="loadingMode" id="paginationMode" autocomplete="off">
+          <label class="btn btn-outline-secondary" for="paginationMode">📄 Пагінація</label>
+
+          <input type="radio" class="btn-check" name="loadingMode" id="infiniteScrollMode" autocomplete="off" checked>
+          <label class="btn btn-outline-secondary" for="infiniteScrollMode">∞ Infinite Scroll</label>
+        </div>
+      </div>
 
       <!-- Loading Spinner -->
       <div id="loadingSpinner" class="text-center d-none">

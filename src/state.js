@@ -4,5 +4,6 @@ export const state = {
   currentQuery: 'nature',
   photos: [],
   currentTab: 'all',
-  isLoading: false
+  isLoading: false,
+  loadingMode: 'infinite' // 'infinite' або 'pagination'
 }

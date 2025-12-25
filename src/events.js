@@ -102,8 +102,8 @@ function handleScroll() {
 
   // Встановлюємо новий таймер
   scrollTimeout = setTimeout(async () => {
-    // Перевіряємо умови для завантаження
-    if (isBottomReached() && state.currentTab === 'all' && !state.isLoading) {
+    // Перевіряємо умови для завантаження (тільки якщо режим infinite scroll)
+    if (isBottomReached() && state.currentTab === 'all' && !state.isLoading && state.loadingMode === 'infinite') {
       await loadMorePhotos()
     }
   }, 200) // Затримка 200мс
@@ -140,6 +140,69 @@ export function setupTabs() {
   })
 }
 
+// ========== КАТЕГОРІЇ ==========
+
+// Обробка кліків на категорії
+export function setupCategories() {
+  elements.categoryButtons.forEach(btn => {
+    btn.addEventListener('click', async () => {
+      // Видалити активний клас з усіх кнопок
+      elements.categoryButtons.forEach(b => b.classList.remove('active'))
+
+      // Додати активний клас до поточної
+      btn.classList.add('active')
+
+      // Отримати категорію
+      const category = btn.dataset.category
+
+      // Оновити стан і завантажити фото
+      state.currentQuery = category
+      state.currentPage = 1
+      state.currentTab = 'all'
+
+      // Активувати вкладку "Всі фото"
+      elements.allTab.classList.add('active')
+      elements.favoritesTab.classList.remove('active')
+
+      const photos = await fetchPhotos(category, 1)
+      state.photos = photos
+      displayPhotos(photos)
+    })
+  })
+}
+
+// ========== РЕЖИМ ЗАВАНТАЖЕННЯ ==========
+
+// Оновити видимість елементів залежно від режиму
+function updateLoadingModeUI() {
+  if (state.loadingMode === 'infinite') {
+    elements.scrollHint.classList.remove('d-none')
+    elements.loadMoreBtn.classList.add('d-none')
+  } else {
+    elements.scrollHint.classList.add('d-none')
+    if (state.currentTab === 'all') {
+      elements.loadMoreBtn.classList.remove('d-none')
+    }
+  }
+}
+
+// Обробка перемикання режиму завантаження
+export function setupLoadingModeToggle() {
+  elements.paginationModeBtn.addEventListener('change', () => {
+    if (elements.paginationModeBtn.checked) {
+      state.loadingMode = 'pagination'
+      updateLoadingModeUI()
+    }
+  })
+
+  elements.infiniteScrollModeBtn.addEventListener('change', () => {
+    if (elements.infiniteScrollModeBtn.checked) {
+      state.loadingMode = 'infinite'
+      updateLoadingModeUI()
+    }
+  })
+}
+
 // Ініціалізація всіх обробників подій
 export function setupEventHandlers() {
   setupSearchForm()
@@ -147,4 +210,6 @@ export function setupEventHandlers() {
   setupLoadMoreButton()
   setupInfiniteScroll()
   setupTabs()
+  setupCategories()
+  setupLoadingModeToggle()
 }

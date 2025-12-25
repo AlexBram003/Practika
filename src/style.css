@@ -176,3 +176,89 @@ body {
     transform: translateY(-5px);
   }
 }
+
+/* Categories Navigation */
+.categories-nav {
+  background: white;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  overflow-x: auto;
+}
+
+.categories-scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 0;
+  scrollbar-width: thin;
+  scrollbar-color: #dee2e6 transparent;
+}
+
+.categories-scroll::-webkit-scrollbar {
+  height: 6px;
+}
+
+.categories-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb {
+  background: #dee2e6;
+  border-radius: 3px;
+}
+
+.categories-scroll::-webkit-scrollbar-thumb:hover {
+  background: #adb5bd;
+}
+
+.category-btn {
+  background: transparent;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #495057;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.category-btn:hover {
+  background: #f8f9fa;
+  color: #212529;
+}
+
+.category-btn.active {
+  background: #212529;
+  color: white;
+}
+
+/* Loading Mode Toggle */
+.btn-group-sm label {
+  font-size: 0.85rem;
+  padding: 4px 12px;
+}
+
+/* Responsive для категорій */
+@media (max-width: 768px) {
+  .categories-nav {
+    margin-left: -12px;
+    margin-right: -12px;
+    border-radius: 0;
+  }
+
+  .d-flex.justify-content-between {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn-group {
+    width: 100%;
+  }
+
+  .btn-group label {
+    flex: 1;
+  }
+}

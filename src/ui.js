@@ -54,10 +54,15 @@ export function displayPhotos(photos, append = false) {
     elements.photoGallery.appendChild(photoCard)
   })
 
-  // Показати підказку та кнопку тільки для вкладки "Всі фото"
+  // Показати підказку або кнопку залежно від режиму та вкладки
   if (state.currentTab === 'all') {
-    elements.loadMoreBtn.classList.remove('d-none')
-    elements.scrollHint.classList.remove('d-none')
+    if (state.loadingMode === 'infinite') {
+      elements.scrollHint.classList.remove('d-none')
+      elements.loadMoreBtn.classList.add('d-none')
+    } else {
+      elements.scrollHint.classList.add('d-none')
+      elements.loadMoreBtn.classList.remove('d-none')
+    }
   } else {
     elements.loadMoreBtn.classList.add('d-none')
     elements.scrollHint.classList.add('d-none')
