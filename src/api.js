@@ -10,10 +10,12 @@ export async function fetchPhotos(query = 'nature', page = 1) {
     hideError()
 
     // Параметри запиту
+    // Завантажуємо більше фото якщо активний фільтр по лайках
+    const perPage = state.minLikes > 0 ? 30 : 12
     const params = {
       query: query,
       page: page,
-      per_page: 12,
+      per_page: perPage,
       client_id: UNSPLASH_ACCESS_KEY
     }
 
@@ -23,16 +25,28 @@ export async function fetchPhotos(query = 'nature', page = 1) {
     }
 
     const response = await axios.get(`${UNSPLASH_API_URL}/search/photos`, { params })
-
-    state.isLoading = false
-    showLoading(false)
-
     let photos = response.data.results
 
     // Клієнтська фільтрація по мінімальній кількості лайків
     if (state.minLikes > 0) {
       photos = photos.filter(photo => photo.likes >= state.minLikes)
+
+      // Якщо після фільтрації фото замало і є ще сторінки, спробувати завантажити ще
+      if (photos.length < 12 && response.data.total_pages > page) {
+        try {
+          const nextPageParams = { ...params, page: page + 1 }
+          const nextResponse = await axios.get(`${UNSPLASH_API_URL}/search/photos`, { params: nextPageParams })
+          const nextPhotos = nextResponse.data.results.filter(photo => photo.likes >= state.minLikes)
+          photos = [...photos, ...nextPhotos]
+        } catch (e) {
+          // Якщо не вдалося завантажити додаткові фото, просто ігноруємо помилку
+          console.warn('Не вдалося завантажити додаткові фото:', e)
+        }
+      }
     }
+
+    state.isLoading = false
+    showLoading(false)
 
     return photos
   } catch (error) {
