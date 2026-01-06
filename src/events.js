@@ -205,6 +205,41 @@ export function setupPaginationClick() {
   })
 }
 
+// ========== ФІЛЬТРИ ==========
+
+// Обробка зміни сортування
+export function setupSortFilter() {
+  elements.sortOrderSelect.addEventListener('change', async () => {
+    state.sortOrder = elements.sortOrderSelect.value
+    state.currentPage = 1
+
+    // Перезавантажити фото з новим сортуванням
+    const photos = await fetchPhotos(state.currentQuery, 1)
+    state.photos = photos
+    displayPhotos(photos)
+  })
+}
+
+// Обробка зміни мінімальних лайків (з debouncing)
+let likesTimeout
+export function setupLikesFilter() {
+  elements.minLikesInput.addEventListener('input', () => {
+    clearTimeout(likesTimeout)
+
+    likesTimeout = setTimeout(async () => {
+      const value = parseInt(elements.minLikesInput.value) || 0
+      state.minLikes = value
+      state.currentPage = 1
+
+      // Перезавантажити фото з новим фільтром
+      const photos = await fetchPhotos(state.currentQuery, 1)
+      state.photos = photos
+      displayPhotos(photos)
+    }, 500) // Затримка 500мс після останнього введення
+  })
+}
+
+// Ініціалізація всіх обробників подій
 export function setupEventHandlers() {
   setupSearchForm()
   setupGalleryClick()
@@ -214,4 +249,6 @@ export function setupEventHandlers() {
   setupCategories()
   setupLoadingModeToggle()
   setupPaginationClick()
+  setupSortFilter()
+  setupLikesFilter()
 }

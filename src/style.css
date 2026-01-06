@@ -224,6 +224,33 @@ body {
   color: white;
 }
 
+/* Filters Container */
+.filters-container {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.filters-container label {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 6px;
+}
+
+.filters-container .form-select,
+.filters-container .form-control {
+  border-radius: 6px;
+  transition: border-color 0.2s ease;
+}
+
+.filters-container .form-select:focus,
+.filters-container .form-control:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.15);
+}
+
+/* Loading Mode Toggle */
 .btn-group-sm label {
   font-size: 0.85rem;
   padding: 4px 12px;

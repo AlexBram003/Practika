@@ -22,5 +22,8 @@ export const elements = {
   loadMoreModeBtn: document.getElementById('loadMoreMode'),
   infiniteScrollModeBtn: document.getElementById('infiniteScrollMode'),
   paginationContainer: document.getElementById('paginationContainer'),
-  paginationNav: document.getElementById('paginationNav')
+  paginationNav: document.getElementById('paginationNav'),
+  // Фільтри
+  sortOrderSelect: document.getElementById('sortOrder'),
+  minLikesInput: document.getElementById('minLikes')
 }

@@ -9,19 +9,32 @@ export async function fetchPhotos(query = 'nature', page = 1) {
     showLoading(true)
     hideError()
 
-    const response = await axios.get(`${UNSPLASH_API_URL}/search/photos`, {
-      params: {
-        query: query,
-        page: page,
-        per_page: 12,
-        client_id: UNSPLASH_ACCESS_KEY
-      }
-    })
+    // Параметри запиту
+    const params = {
+      query: query,
+      page: page,
+      per_page: 12,
+      client_id: UNSPLASH_ACCESS_KEY
+    }
+
+    // Додати order_by якщо не relevant
+    if (state.sortOrder !== 'relevant') {
+      params.order_by = state.sortOrder
+    }
+
+    const response = await axios.get(`${UNSPLASH_API_URL}/search/photos`, { params })
 
     state.isLoading = false
     showLoading(false)
 
-    return response.data.results
+    let photos = response.data.results
+
+    // Клієнтська фільтрація по мінімальній кількості лайків
+    if (state.minLikes > 0) {
+      photos = photos.filter(photo => photo.likes >= state.minLikes)
+    }
+
+    return photos
   } catch (error) {
     state.isLoading = false
     showLoading(false)

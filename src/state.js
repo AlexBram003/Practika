@@ -6,5 +6,7 @@ export const state = {
   currentTab: 'all',
   isLoading: false,
   loadingMode: 'infinite', // 'pagination' | 'loadMore' | 'infinite'
-  totalPages: 10 
+  totalPages: 10, // Приблизна кількість сторінок (для пагінації)
+  sortOrder: 'relevant', // 'relevant' | 'popular' | 'latest'
+  minLikes: 0 // Мінімальна кількість лайків для фільтрації
 }

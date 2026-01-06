@@ -52,6 +52,26 @@
         </div>
       </div>
 
+      <!-- Filters -->
+      <div class="filters-container mb-3">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="sortOrder" class="form-label small">Сортування за популярністю:</label>
+            <select id="sortOrder" class="form-select form-select-sm">
+              <option value="relevant">Релевантність (за замовчуванням)</option>
+              <option value="popular">Від найпопулярніших ⬇️</option>
+              <option value="latest">Від найновіших 🕒</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="minLikes" class="form-label small">Мінімум лайків:</label>
+            <input type="number" id="minLikes" class="form-control form-control-sm"
+                   placeholder="Наприклад: 100" min="0" step="10">
+          </div>
+        </div>
+      </div>
+
+      <!-- Tabs для улюблених фото та перемикач режиму -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <ul class="nav nav-tabs border-0 mb-0" id="galleryTabs">
           <li class="nav-item">
