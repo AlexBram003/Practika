@@ -101,6 +101,9 @@ export function setupTabs() {
     elements.allTab.classList.add('active')
     elements.favoritesTab.classList.remove('active')
 
+    // Приховати поле мінімальних лайків для вкладки "Всі фото"
+    elements.minLikesInput.closest('.col-md-6').style.display = 'none'
+
     if (state.photos.length === 0) {
       const photos = await fetchPhotos(state.currentQuery, 1)
       state.photos = photos
@@ -113,7 +116,16 @@ export function setupTabs() {
     elements.favoritesTab.classList.add('active')
     elements.allTab.classList.remove('active')
 
-    const favorites = getFavorites()
+    // Показати поле мінімальних лайків для вкладки "Улюблені"
+    elements.minLikesInput.closest('.col-md-6').style.display = 'block'
+
+    let favorites = getFavorites()
+
+    // Застосувати фільтр по лайках для улюблених
+    if (state.minLikes > 0) {
+      favorites = favorites.filter(photo => photo.likes >= state.minLikes)
+    }
+
     displayPhotos(favorites)
   })
 }
@@ -220,21 +232,26 @@ export function setupSortFilter() {
   })
 }
 
-// Обробка зміни мінімальних лайків (з debouncing)
+// Обробка зміни мінімальних лайків (тільки для улюблених)
 let likesTimeout
 export function setupLikesFilter() {
   elements.minLikesInput.addEventListener('input', () => {
     clearTimeout(likesTimeout)
 
-    likesTimeout = setTimeout(async () => {
+    likesTimeout = setTimeout(() => {
       const value = parseInt(elements.minLikesInput.value) || 0
       state.minLikes = value
-      state.currentPage = 1
 
-      // Перезавантажити фото з новим фільтром
-      const photos = await fetchPhotos(state.currentQuery, 1)
-      state.photos = photos
-      displayPhotos(photos)
+      // Застосувати фільтр тільки якщо відкрита вкладка "Улюблені"
+      if (state.currentTab === 'favorites') {
+        let favorites = getFavorites()
+
+        if (state.minLikes > 0) {
+          favorites = favorites.filter(photo => photo.likes >= state.minLikes)
+        }
+
+        displayPhotos(favorites)
+      }
     }, 500) // Затримка 500мс після останнього введення
   })
 }
