@@ -7,16 +7,13 @@
     <title>Photo Gallery - Галерея Фотографій</title>
   </head>
   <body>
-    <!-- Header -->
     <nav class="navbar navbar-dark bg-dark">
       <div class="container-fluid">
         <span class="navbar-brand mb-0 h1">📸 Photo Gallery</span>
       </div>
     </nav>
 
-    <!-- Main Container -->
     <div class="container my-4">
-      <!-- Search Form -->
       <div class="row mb-4">
         <div class="col-12">
           <div class="card">
@@ -39,7 +36,6 @@
         </div>
       </div>
 
-      <!-- Categories Navigation -->
       <div class="categories-nav mb-3">
         <div class="categories-scroll">
           <button class="category-btn active" data-category="nature">Featured</button>
@@ -56,7 +52,6 @@
         </div>
       </div>
 
-      <!-- Tabs для улюблених фото та перемикач режиму -->
       <div class="d-flex justify-content-between align-items-center mb-3">
         <ul class="nav nav-tabs border-0 mb-0" id="galleryTabs">
           <li class="nav-item">
@@ -69,7 +64,6 @@
           </li>
         </ul>
 
-        <!-- Режим завантаження: Пагінація / Load More / Infinite Scroll -->
         <div class="btn-group btn-group-sm" role="group" aria-label="Loading mode">
           <input type="radio" class="btn-check" name="loadingMode" id="paginationMode" autocomplete="off">
           <label class="btn btn-outline-secondary" for="paginationMode">📄 Пагінація</label>
@@ -82,27 +76,21 @@
         </div>
       </div>
 
-      <!-- Loading Spinner -->
       <div id="loadingSpinner" class="text-center d-none">
         <div class="spinner-border text-primary" role="status">
           <span class="visually-hidden">Завантаження...</span>
         </div>
       </div>
 
-      <!-- Error Alert -->
       <div id="errorAlert" class="alert alert-danger d-none" role="alert"></div>
 
-      <!-- Photo Gallery Grid -->
       <div id="photoGallery" class="row row-cols-1 row-cols-md-3 g-4"></div>
 
-      <!-- Pagination Controls -->
       <nav id="paginationContainer" class="d-none" aria-label="Photo pagination">
         <ul class="pagination justify-content-center my-4" id="paginationNav">
-          <!-- Pagination buttons will be inserted here dynamically -->
         </ul>
       </nav>
 
-      <!-- Infinite Scroll Info & Load More Button -->
       <div class="text-center my-4">
         <p class="text-muted small d-none" id="scrollHint">
           <i>Прокручуйте вниз для автоматичного завантаження фото</i> ⬇️
@@ -113,7 +101,6 @@
       </div>
     </div>
 
-    <!-- Modal for Full Size Photo -->
     <div class="modal fade" id="photoModal" tabindex="-1" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered modal-xl">
         <div class="modal-content">

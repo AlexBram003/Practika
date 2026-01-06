@@ -1,4 +1,4 @@
-// Стан застосунку
+
 export const state = {
   currentPage: 1,
   currentQuery: 'nature',
@@ -6,5 +6,5 @@ export const state = {
   currentTab: 'all',
   isLoading: false,
   loadingMode: 'infinite', // 'pagination' | 'loadMore' | 'infinite'
-  totalPages: 10 // Приблизна кількість сторінок (для пагінації)
+  totalPages: 10 
 }
