@@ -102,7 +102,7 @@ export function setupTabs() {
     elements.favoritesTab.classList.remove('active')
 
     // Приховати поле мінімальних лайків для вкладки "Всі фото"
-    elements.minLikesInput.closest('.col-md-6').style.display = 'none'
+    elements.minLikesContainer.classList.add('d-none')
 
     if (state.photos.length === 0) {
       const photos = await fetchPhotos(state.currentQuery, 1)
@@ -117,7 +117,7 @@ export function setupTabs() {
     elements.allTab.classList.remove('active')
 
     // Показати поле мінімальних лайків для вкладки "Улюблені"
-    elements.minLikesInput.closest('.col-md-6').style.display = 'block'
+    elements.minLikesContainer.classList.remove('d-none')
 
     let favorites = getFavorites()
 

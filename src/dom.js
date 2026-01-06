@@ -25,5 +25,6 @@ export const elements = {
   paginationNav: document.getElementById('paginationNav'),
   // Фільтри
   sortOrderSelect: document.getElementById('sortOrder'),
-  minLikesInput: document.getElementById('minLikes')
+  minLikesInput: document.getElementById('minLikes'),
+  minLikesContainer: document.getElementById('minLikesContainer')
 }
