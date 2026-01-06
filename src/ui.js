@@ -29,7 +29,37 @@ export function displayPhotos(photos, append = false) {
     elements.photoGallery.innerHTML = ''
   }
 
+  // Видалити повідомлення про кінець, якщо є нові фото
+  if (photos.length > 0) {
+    const existingEndMessage = elements.photoGallery.querySelector('.end-message')
+    if (existingEndMessage) {
+      existingEndMessage.remove()
+    }
+  }
+
   if (photos.length === 0) {
+    // Якщо це режим довантаження (append) - не очищаємо існуючі фото
+    if (append) {
+      // Простоховаємо кнопки завантаження, фото залишаються
+      elements.loadMoreBtn.classList.add('d-none')
+      elements.scrollHint.classList.add('d-none')
+
+      // Можна показати повідомлення що більше фото немає
+      const existingEndMessage = elements.photoGallery.querySelector('.end-message')
+      if (!existingEndMessage) {
+        const endMessage = document.createElement('div')
+        endMessage.className = 'col-12 end-message'
+        endMessage.innerHTML = `
+          <div class="text-center text-muted py-4">
+            <p>📷 Це всі фото за вашим запитом</p>
+          </div>
+        `
+        elements.photoGallery.appendChild(endMessage)
+      }
+      return
+    }
+
+    // Якщо це новий пошук (не append) - показуємо empty state
     elements.photoGallery.innerHTML = `
       <div class="col-12">
         <div class="empty-state">
