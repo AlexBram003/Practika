@@ -18,25 +18,17 @@ def create_presentation():
     DARK_GRAY = RGBColor(52, 73, 94)
     WHITE = RGBColor(255, 255, 255)
     GREEN = RGBColor(39, 174, 96)
+    ORANGE = RGBColor(230, 126, 34)
 
     # === СЛАЙД 1: Титульний ===
-    slide = prs.slides.add_slide(prs.slide_layouts[6])  # Blank
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-    # Фон
-    background = slide.shapes.add_shape(
-        1,  # Rectangle
-        0, 0,
-        prs.slide_width, prs.slide_height
-    )
+    background = slide.shapes.add_shape(1, 0, 0, prs.slide_width, prs.slide_height)
     background.fill.solid()
     background.fill.fore_color.rgb = DARK_BLUE
     background.line.fill.background()
 
-    # Заголовок
-    title_box = slide.shapes.add_textbox(
-        Inches(1), Inches(2),
-        Inches(8), Inches(1.5)
-    )
+    title_box = slide.shapes.add_textbox(Inches(1), Inches(2), Inches(8), Inches(1.5))
     title_frame = title_box.text_frame
     title_frame.text = "📸 Photo Gallery"
     title_para = title_frame.paragraphs[0]
@@ -45,11 +37,7 @@ def create_presentation():
     title_para.font.color.rgb = WHITE
     title_para.alignment = PP_ALIGN.CENTER
 
-    # Підзаголовок
-    subtitle_box = slide.shapes.add_textbox(
-        Inches(1), Inches(3.5),
-        Inches(8), Inches(1)
-    )
+    subtitle_box = slide.shapes.add_textbox(Inches(1), Inches(3.5), Inches(8), Inches(1))
     subtitle_frame = subtitle_box.text_frame
     subtitle_frame.text = "Веб-застосунок для пошуку та перегляду фотографій"
     subtitle_para = subtitle_frame.paragraphs[0]
@@ -57,11 +45,7 @@ def create_presentation():
     subtitle_para.font.color.rgb = LIGHT_GRAY
     subtitle_para.alignment = PP_ALIGN.CENTER
 
-    # Автор
-    author_box = slide.shapes.add_textbox(
-        Inches(1), Inches(5.5),
-        Inches(8), Inches(1.5)
-    )
+    author_box = slide.shapes.add_textbox(Inches(1), Inches(5.5), Inches(8), Inches(1.5))
     author_frame = author_box.text_frame
     author_text = "Виконав: Брам Олександр\nГрупа: ОП-221\nОлександрійський політехнічний фаховий коледж\n2026"
     author_frame.text = author_text
@@ -70,59 +54,488 @@ def create_presentation():
     author_para.font.color.rgb = LIGHT_GRAY
     author_para.alignment = PP_ALIGN.CENTER
 
-    # === СЛАЙД 2: Опис проєкту ===
+    # === СЛАЙД 2: Головна сторінка сайту ===
     slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-    # Заголовок
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
     tf = title_box.text_frame
-    tf.text = "Опис проєкту"
+    tf.text = "Головна сторінка застосунку"
     p = tf.paragraphs[0]
-    p.font.size = Pt(40)
+    p.font.size = Pt(36)
     p.font.bold = True
     p.font.color.rgb = DARK_BLUE
 
-    # Контент
-    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5))
-    tf = content_box.text_frame
-    tf.word_wrap = True
+    # Placeholder для скріншота
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(9), Inches(5)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = LIGHT_GRAY
+    img_placeholder.line.color.rgb = DARK_GRAY
+    img_placeholder.line.width = Pt(2)
 
-    text = """Photo Gallery - інтерактивний веб-застосунок для пошуку та перегляду фотографій з API Unsplash.
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ:\n\nГоловна сторінка з навігацією,\nформою пошуку та галереєю фотографій"
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(20)
+        para.font.color.rgb = DARK_GRAY
 
-🎯 Мета проєкту:
-• Створення зручного інтерфейсу для пошуку фотографій
-• Практичне застосування сучасних веб-технологій
-• Інтеграція з зовнішнім API
-• Реалізація адаптивного дизайну
+    # Опис знизу
+    desc_box = slide.shapes.add_textbox(Inches(0.5), Inches(6.4), Inches(9), Inches(0.9))
+    tf = desc_box.text_frame
+    tf.text = "🔹 Navbar з назвою застосунку  🔹 Форма пошуку з кнопкою  🔹 Адаптивна галерея фотографій (3 колонки)"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(16)
+    p.font.color.rgb = DARK_GRAY
+    p.alignment = PP_ALIGN.CENTER
 
-📦 Варіант завдання: №6 - Photo Gallery
-Відображення фотографій з API (Unsplash) із можливістю перегляду у повному розмірі та збереження улюблених"""
-
-    tf.text = text
-    for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(18)
-        paragraph.font.color.rgb = DARK_GRAY
-        paragraph.space_after = Pt(12)
-
-    # === СЛАЙД 3: Технічний стек ===
+    # === СЛАЙД 3: Форма пошуку ===
     slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
     tf = title_box.text_frame
-    tf.text = "Технічний стек"
+    tf.text = "🔍 Пошук фотографій"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Ліворуч - скріншот
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(5.5), Inches(4)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = LIGHT_GRAY
+    img_placeholder.line.color.rgb = DARK_GRAY
+    img_placeholder.line.width = Pt(2)
+
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ:\n\nФорма пошуку з\nвведеним запитом\n\"nature\""
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(18)
+        para.font.color.rgb = DARK_GRAY
+
+    # Праворуч - опис
+    desc_box = slide.shapes.add_textbox(Inches(6.2), Inches(1.2), Inches(3.5), Inches(4.5))
+    tf = desc_box.text_frame
+    text = """Функціонал пошуку:
+
+✅ Текстове поле з
+   placeholder
+
+✅ HTML5 валідація
+   (required)
+
+✅ JavaScript валідація
+   (trim для порожніх)
+
+✅ Кнопка "Пошук"
+
+✅ Submit при Enter"""
+
+    tf.text = text
+    for para in tf.paragraphs:
+        para.font.size = Pt(16)
+        para.font.color.rgb = DARK_GRAY
+        para.space_after = Pt(8)
+
+    # === СЛАЙД 4: Категорії ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "🗂 Категорії для швидкого доступу"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Скріншот
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(9), Inches(2.5)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = LIGHT_GRAY
+    img_placeholder.line.color.rgb = DARK_GRAY
+    img_placeholder.line.width = Pt(2)
+
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ: Горизонтальна навігація з кнопками категорій\n(Featured, Wallpapers, 3D Renders, Nature, Textures, Film, Architecture...)"
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(18)
+        para.font.color.rgb = DARK_GRAY
+
+    # Опис
+    desc_box = slide.shapes.add_textbox(Inches(0.8), Inches(4), Inches(8.5), Inches(3))
+    tf = desc_box.text_frame
+    text = """🎯 11 популярних категорій для швидкого пошуку
+
+📱 Горизонтальна прокрутка (на мобільних - свайп)
+
+🎨 Активна категорія виділена темним фоном та білим текстом
+
+⚡ Клік на категорію автоматично виконує пошук"""
+
+    tf.text = text
+    for para in tf.paragraphs:
+        para.font.size = Pt(20)
+        para.font.color.rgb = DARK_GRAY
+        para.space_after = Pt(12)
+
+    # === СЛАЙД 5: Галерея фотографій ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "🖼 Адаптивна галерея фотографій"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Скріншот
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(9), Inches(4.5)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = LIGHT_GRAY
+    img_placeholder.line.color.rgb = DARK_GRAY
+    img_placeholder.line.width = Pt(2)
+
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ:\n\nГалерея з 9-12 фотографіями в адаптивній сітці (3 колонки)\nКожна картка має кнопку улюбленого (🤍), інформацію про автора та лайки"
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(18)
+        para.font.color.rgb = DARK_GRAY
+
+    # Опис
+    desc_box = slide.shapes.add_textbox(Inches(0.8), Inches(5.9), Inches(8.5), Inches(1.4))
+    tf = desc_box.text_frame
+    text = """Bootstrap Grid: row-cols-1 row-cols-md-3 g-4  •  Динамічне створення карток через createElement  •  Lazy loading зображень"""
+    p = tf.paragraphs[0]
+    p.font.size = Pt(16)
+    p.font.color.rgb = DARK_GRAY
+    p.alignment = PP_ALIGN.CENTER
+
+    # === СЛАЙД 6: Фільтри та сортування ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "🔄 Сортування та фільтри"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Ліворуч - скріншот
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(5), Inches(3.5)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = LIGHT_GRAY
+    img_placeholder.line.color.rgb = DARK_GRAY
+    img_placeholder.line.width = Pt(2)
+
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ:\n\nФорми фільтрів:\n- Сортування\n- Мінімум лайків"
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(16)
+        para.font.color.rgb = DARK_GRAY
+
+    # Праворуч - опис
+    desc_box = slide.shapes.add_textbox(Inches(5.7), Inches(1.2), Inches(4), Inches(5))
+    tf = desc_box.text_frame
+    text = """📊 Сортування:
+• Релевантність
+• Від найпопулярніших ⬇️
+• Від найновіших 🕒
+
+🎯 Фільтр лайків:
+• Мінімум вподобань
+• Number input (min="0")
+• Debouncing 500мс
+• Тільки для улюблених
+
+⚡ Автоматичне
+   оновлення галереї"""
+
+    tf.text = text
+    for para in tf.paragraphs:
+        para.font.size = Pt(15)
+        para.font.color.rgb = DARK_GRAY
+        para.space_after = Pt(6)
+
+    # === СЛАЙД 7: Режими завантаження ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "📄 Три режими завантаження"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Скріншот
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(9), Inches(2)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = LIGHT_GRAY
+    img_placeholder.line.color.rgb = DARK_GRAY
+    img_placeholder.line.width = Pt(2)
+
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ: Перемикач режимів (btn-group)\n📄 Пагінація  |  ➕ Завантажити більше  |  ∞ Infinite Scroll"
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(16)
+        para.font.color.rgb = DARK_GRAY
+
+    # Опис режимів
+    desc_box = slide.shapes.add_textbox(Inches(0.7), Inches(3.5), Inches(8.7), Inches(3.5))
+    tf = desc_box.text_frame
+    text = """📄 Пагінація - класична навігація з номерами сторінок
+   • Кнопки "Попередня"/"Наступна"
+   • Максимум 5 видимих номерів
+   • Плавна прокрутка до верху
+
+➕ Завантажити більше - кнопка для додавання фото
+   • Додає наступні 12 фото до існуючих
+   • Контроль завантаження користувачем
+
+∞ Infinite Scroll - автоматичне завантаження при прокрутці
+   • За 300px до кінця сторінки
+   • Debouncing 200мс
+   • Безперервний перегляд"""
+
+    tf.text = text
+    for para in tf.paragraphs:
+        para.font.size = Pt(15)
+        para.font.color.rgb = DARK_GRAY
+        para.space_after = Pt(8)
+
+    # === СЛАЙД 8: Модальне вікно ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "🖼 Перегляд фото у повному розмірі"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Скріншот
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(9), Inches(4.5)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = LIGHT_GRAY
+    img_placeholder.line.color.rgb = DARK_GRAY
+    img_placeholder.line.width = Pt(2)
+
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ:\n\nМодальне вікно Bootstrap з фото у високій якості\nЗаголовок, опис, автор, кількість лайків\nКнопки: \"Закрити\" та \"Відкрити оригінал\""
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(18)
+        para.font.color.rgb = DARK_GRAY
+
+    # Опис
+    desc_box = slide.shapes.add_textbox(Inches(0.8), Inches(5.9), Inches(8.5), Inches(1.4))
+    tf = desc_box.text_frame
+    text = """Bootstrap Modal (modal-xl)  •  Клік на картку відкриває вікно  •  Закриття: ESC, клік поза вікном, кнопка ✕"""
+    p = tf.paragraphs[0]
+    p.font.size = Pt(16)
+    p.font.color.rgb = DARK_GRAY
+    p.alignment = PP_ALIGN.CENTER
+
+    # === СЛАЙД 9: Улюблені фото ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "❤️ Система улюблених фотографій"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Скріншот
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(9), Inches(4)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = LIGHT_GRAY
+    img_placeholder.line.color.rgb = DARK_GRAY
+    img_placeholder.line.width = Pt(2)
+
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ:\n\nВкладка \"❤️ Улюблені (N)\" зі збереженими фотографіями\nКнопки улюбленого: 🤍 (не додано) та ❤️ (додано)\nФільтр за мінімальною кількістю лайків"
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(18)
+        para.font.color.rgb = DARK_GRAY
+
+    # Опис
+    desc_box = slide.shapes.add_textbox(Inches(0.8), Inches(5.4), Inches(8.5), Inches(1.8))
+    tf = desc_box.text_frame
+    text = """💾 localStorage для збереження даних  •  JSON.stringify / JSON.parse  •  Лічильник улюблених\nКлік на ❤️ додає/видаляє  •  Фільтрація за лайками  •  Дані зберігаються навіть після закриття браузера"""
+    p = tf.paragraphs[0]
+    p.font.size = Pt(15)
+    p.font.color.rgb = DARK_GRAY
+    p.alignment = PP_ALIGN.CENTER
+
+    # === СЛАЙД 10: Адаптивний дизайн ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "📱 Адаптивний дизайн"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Три placeholder для різних екранів
+    # Desktop
+    desktop = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(3), Inches(4)
+    )
+    desktop.fill.solid()
+    desktop.fill.fore_color.rgb = LIGHT_GRAY
+    desktop.line.color.rgb = DARK_GRAY
+    desktop.line.width = Pt(2)
+
+    dt = desktop.text_frame
+    dt.text = "📷\n\nDesktop\n\n3 колонки"
+    for para in dt.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(16)
+        para.font.color.rgb = DARK_GRAY
+
+    # Tablet
+    tablet = slide.shapes.add_shape(
+        1, Inches(3.7), Inches(1.2), Inches(3), Inches(4)
+    )
+    tablet.fill.solid()
+    tablet.fill.fore_color.rgb = LIGHT_GRAY
+    tablet.line.color.rgb = DARK_GRAY
+    tablet.line.width = Pt(2)
+
+    tt = tablet.text_frame
+    tt.text = "📷\n\nTablet\n\n2 колонки"
+    for para in tt.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(16)
+        para.font.color.rgb = DARK_GRAY
+
+    # Mobile
+    mobile = slide.shapes.add_shape(
+        1, Inches(6.9), Inches(1.2), Inches(3), Inches(4)
+    )
+    mobile.fill.solid()
+    mobile.fill.fore_color.rgb = LIGHT_GRAY
+    mobile.line.color.rgb = DARK_GRAY
+    mobile.line.width = Pt(2)
+
+    mt = mobile.text_frame
+    mt.text = "📷\n\nMobile\n\n1 колонка"
+    for para in mt.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(16)
+        para.font.color.rgb = DARK_GRAY
+
+    # Опис
+    desc_box = slide.shapes.add_textbox(Inches(0.7), Inches(5.4), Inches(8.7), Inches(1.8))
+    tf = desc_box.text_frame
+    text = """Bootstrap Grid System: row-cols-1 row-cols-md-3\nMedia queries для різних пристроїв\nГнучкі елементи (Flexbox) для категорій та фільтрів\nHover ефекти на картках (тільки desktop)"""
+    p = tf.paragraphs[0]
+    p.font.size = Pt(16)
+    p.font.color.rgb = DARK_GRAY
+    p.alignment = PP_ALIGN.CENTER
+
+    # === СЛАЙД 11: Обробка помилок ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "⚠️ Обробка помилок"
+    p = tf.paragraphs[0]
+    p.font.size = Pt(36)
+    p.font.bold = True
+    p.font.color.rgb = DARK_BLUE
+
+    # Скріншот
+    img_placeholder = slide.shapes.add_shape(
+        1, Inches(0.5), Inches(1.2), Inches(5.5), Inches(3)
+    )
+    img_placeholder.fill.solid()
+    img_placeholder.fill.fore_color.rgb = RGBColor(255, 230, 230)
+    img_placeholder.line.color.rgb = RGBColor(200, 50, 50)
+    img_placeholder.line.width = Pt(2)
+
+    img_text = img_placeholder.text_frame
+    img_text.text = "📷 СКРІНШОТ:\n\nBootstrap Alert\nз повідомленням\nпро помилку"
+    for para in img_text.paragraphs:
+        para.alignment = PP_ALIGN.CENTER
+        para.font.size = Pt(16)
+        para.font.color.rgb = RGBColor(180, 40, 40)
+
+    # Опис
+    desc_box = slide.shapes.add_textbox(Inches(6.2), Inches(1.2), Inches(3.5), Inches(5.5))
+    tf = desc_box.text_frame
+    text = """Типи помилок:
+
+🔴 API помилки:
+• 401 - Невірний ключ
+• 403 - Ліміт запитів
+
+🔴 Мережа:
+• Помилка з'єднання
+• Timeout
+
+🔴 Валідація:
+• Порожній запит
+
+🔴 localStorage:
+• Недоступний
+
+Try-catch блоки
+для всіх операцій"""
+
+    tf.text = text
+    for para in tf.paragraphs:
+        para.font.size = Pt(14)
+        para.font.color.rgb = DARK_GRAY
+        para.space_after = Pt(6)
+
+    # === СЛАЙД 12: Технічний стек ===
+    slide = prs.slides.add_slide(prs.slide_layouts[6])
+
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
+    tf = title_box.text_frame
+    tf.text = "🛠 Технічний стек"
     p = tf.paragraphs[0]
     p.font.size = Pt(40)
     p.font.bold = True
     p.font.color.rgb = DARK_BLUE
 
     # Ліва колонка
-    left_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(4), Inches(5))
+    left_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(4.3), Inches(5.8))
     tf = left_box.text_frame
-    text = """⚡ Інструменти збірки:
+    text = """⚡ Збірка:
 • Vite 7.2.4
 • npm/Node.js
 
-🎨 Frontend:
+💻 Frontend:
 • JavaScript ES6+
 • HTML5
 • CSS3
@@ -133,251 +546,78 @@ def create_presentation():
 
     tf.text = text
     for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(16)
+        paragraph.font.size = Pt(18)
         paragraph.font.color.rgb = DARK_GRAY
         paragraph.space_after = Pt(10)
 
     # Права колонка
-    right_box = slide.shapes.add_textbox(Inches(5.2), Inches(1.5), Inches(4), Inches(5))
+    right_box = slide.shapes.add_textbox(Inches(5.2), Inches(1.3), Inches(4.3), Inches(5.8))
     tf = right_box.text_frame
-    text = """🔌 API та сервіси:
+    text = """🔌 API:
 • Unsplash API
-• REST API
+• REST
 
-💾 Зберігання даних:
+💾 Дані:
 • localStorage
 • JSON
 
-🛠 Інструменти розробки:
+🛠 Інструменти:
 • Git/GitHub
 • VS Code
 • Chrome DevTools"""
 
     tf.text = text
     for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(16)
+        paragraph.font.size = Pt(18)
         paragraph.font.color.rgb = DARK_GRAY
         paragraph.space_after = Pt(10)
 
-    # === СЛАЙД 4: Функціональність (1) ===
+    # === СЛАЙД 13: Модульна архітектура ===
     slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
     tf = title_box.text_frame
-    tf.text = "Основна функціональність"
+    tf.text = "📁 Модульна архітектура"
     p = tf.paragraphs[0]
     p.font.size = Pt(40)
     p.font.bold = True
     p.font.color.rgb = DARK_BLUE
 
-    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5.5))
-    tf = content_box.text_frame
-    text = """🔍 Пошук фотографій
-• Пошук за ключовими словами
-• Валідація форми введення
-• Миттєве відображення результатів
-
-🗂 Категорії
-• 11 популярних категорій (Nature, Architecture, Travel...)
-• Горизонтальна прокрутка
-• Швидкий доступ одним кліком
-
-🔄 Сортування
-• За релевантністю (за замовчуванням)
-• Від найпопулярніших ⬇️
-• Від найновіших 🕒"""
-
-    tf.text = text
-    for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(18)
-        paragraph.font.color.rgb = DARK_GRAY
-        paragraph.space_after = Pt(14)
-
-    # === СЛАЙД 5: Функціональність (2) ===
-    slide = prs.slides.add_slide(prs.slide_layouts[6])
-
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
-    tf = title_box.text_frame
-    tf.text = "Розширена функціональність"
-    p = tf.paragraphs[0]
-    p.font.size = Pt(40)
-    p.font.bold = True
-    p.font.color.rgb = DARK_BLUE
-
-    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5.5))
-    tf = content_box.text_frame
-    text = """📄 Три режими завантаження:
-• Пагінація з номерами сторінок
-• Кнопка "Завантажити більше"
-• Infinite Scroll (нескінченний скрол)
-
-❤️ Система улюблених
-• Збереження фото в localStorage
-• Фільтрація за мінімальною кількістю лайків
-• Окрема вкладка для перегляду
-
-🖼 Перегляд у повному розмірі
-• Модальне вікно Bootstrap
-• Деталі про фото та автора
-• Посилання на оригінал на Unsplash"""
-
-    tf.text = text
-    for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(18)
-        paragraph.font.color.rgb = DARK_GRAY
-        paragraph.space_after = Pt(14)
-
-    # === СЛАЙД 6: Архітектура ===
-    slide = prs.slides.add_slide(prs.slide_layouts[6])
-
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
-    tf = title_box.text_frame
-    tf.text = "Модульна архітектура"
-    p = tf.paragraphs[0]
-    p.font.size = Pt(40)
-    p.font.bold = True
-    p.font.color.rgb = DARK_BLUE
-
-    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5.5))
+    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(8.5), Inches(5.8))
     tf = content_box.text_frame
     text = """Проєкт організовано за принципом розділення відповідальностей:
 
-📁 src/config.js - конфігурація API ключів
+📁 src/config.js - конфігурація API ключів та констант
 📁 src/state.js - глобальний стан застосунку
-📁 src/dom.js - посилання на DOM елементи
-📁 src/storage.js - робота з localStorage
-📁 src/api.js - HTTP запити до Unsplash API
-📁 src/ui.js - функції відображення інтерфейсу
-📁 src/events.js - обробники подій
-📁 src/main.js - точка входу, ініціалізація
+📁 src/dom.js - посилання на всі DOM елементи
+📁 src/storage.js - робота з localStorage (getFavorites, saveFavorites)
+📁 src/api.js - HTTP запити до Unsplash API через Axios
+📁 src/ui.js - функції відображення UI (createPhotoCard, displayPhotos)
+📁 src/events.js - обробники подій (submit, click, scroll)
+📁 src/main.js - точка входу, ініціалізація застосунку
 
-✅ Переваги модульної архітектури:
-• Легко підтримувати та розширювати
-• Чистий та організований код
-• Можливість повторного використання"""
+✅ Переваги: легко підтримувати, розширювати, тестувати
+✅ Кожен модуль має свою відповідальність
+✅ Можливість повторного використання коду"""
 
     tf.text = text
     for paragraph in tf.paragraphs:
         paragraph.font.size = Pt(16)
         paragraph.font.color.rgb = DARK_GRAY
-        paragraph.space_after = Pt(10)
-
-    # === СЛАЙД 7: Реалізовані теми практики ===
-    slide = prs.slides.add_slide(prs.slide_layouts[6])
-
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
-    tf = title_box.text_frame
-    tf.text = "Реалізовані теми практики"
-    p = tf.paragraphs[0]
-    p.font.size = Pt(40)
-    p.font.bold = True
-    p.font.color.rgb = DARK_BLUE
-
-    # Ліва колонка
-    left_box = slide.shapes.add_textbox(Inches(0.6), Inches(1.5), Inches(4.5), Inches(5.5))
-    tf = left_box.text_frame
-    text = """✅ Створення WEB-проєкту
-   (Vite, Git, HTML)
-
-✅ Робота з DOM-деревом
-   (createElement, appendChild)
-
-✅ Обробка подій
-   (submit, click, scroll)
-
-✅ Масиви та об'єкти
-   (forEach, find, filter)
-
-✅ HTML-форми та валідація
-   (required, trim())
-
-✅ Bootstrap та Axios
-   (Modal, Navbar, HTTP)"""
-
-    tf.text = text
-    for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(14)
-        paragraph.font.color.rgb = DARK_GRAY
         paragraph.space_after = Pt(8)
 
-    # Права колонка
-    right_box = slide.shapes.add_textbox(Inches(5.2), Inches(1.5), Inches(4.5), Inches(5.5))
-    tf = right_box.text_frame
-    text = """✅ Взаємодія з API
-   (Unsplash, JSON, async)
-
-✅ Обробка помилок
-   (try-catch, типи помилок)
-
-✅ Пагінація та скрол
-   (infinite scroll, debounce)
-
-✅ localStorage
-   (JSON.stringify/parse)
-
-✅ Налагодження
-   (Chrome DevTools)
-
-✅ Підготовка до публікації
-   (build, deploy)"""
-
-    tf.text = text
-    for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(14)
-        paragraph.font.color.rgb = DARK_GRAY
-        paragraph.space_after = Pt(8)
-
-    # === СЛАЙД 8: Особливості реалізації ===
+    # === СЛАЙД 14: Приклад коду ===
     slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
     tf = title_box.text_frame
-    tf.text = "Особливості реалізації"
+    tf.text = "💻 Приклад коду: API запити"
     p = tf.paragraphs[0]
-    p.font.size = Pt(40)
+    p.font.size = Pt(36)
     p.font.bold = True
     p.font.color.rgb = DARK_BLUE
 
-    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5.5))
-    tf = content_box.text_frame
-    text = """🎯 Делегування подій (Event Delegation)
-Один обробник на контейнері галереї замість окремих на кожній картці
-→ Економія пам'яті та кращу продуктивність
-
-⏱ Debouncing для оптимізації
-Затримка 200мс для scroll, 500мс для фільтрів
-→ Запобігання надмірним запитам до API
-
-📱 Адаптивний дизайн
-Bootstrap Grid: 3 колонки (desktop), 2 (tablet), 1 (mobile)
-→ Коректне відображення на всіх пристроях
-
-🔄 Spread оператор для immutability
-state.photos = [...state.photos, ...newPhotos]
-→ Immutable підхід до роботи з даними
-
-✨ Lazy loading зображень
-<img loading="lazy" />
-→ Швидше завантаження сторінки"""
-
-    tf.text = text
-    for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(15)
-        paragraph.font.color.rgb = DARK_GRAY
-        paragraph.space_after = Pt(10)
-
-    # === СЛАЙД 9: Код - API запити ===
-    slide = prs.slides.add_slide(prs.slide_layouts[6])
-
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
-    tf = title_box.text_frame
-    tf.text = "Приклад коду: API запити"
-    p = tf.paragraphs[0]
-    p.font.size = Pt(40)
-    p.font.bold = True
-    p.font.color.rgb = DARK_BLUE
-
-    code_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5.5))
+    code_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(8.5), Inches(5.8))
     tf = code_box.text_frame
     code = """export async function fetchPhotos(query, page) {
   try {
@@ -395,7 +635,11 @@ state.photos = [...state.photos, ...newPhotos]
 
     return response.data.results
   } catch (error) {
-    handleError(error)
+    if (error.response) {
+      showError(`Помилка API: ${error.response.status}`)
+    } else if (error.request) {
+      showError('Помилка мережі')
+    }
     return []
   }
 }"""
@@ -403,59 +647,21 @@ state.photos = [...state.photos, ...newPhotos]
     tf.text = code
     for paragraph in tf.paragraphs:
         paragraph.font.name = 'Courier New'
-        paragraph.font.size = Pt(15)
+        paragraph.font.size = Pt(14)
         paragraph.font.color.rgb = DARK_GRAY
 
-    # === СЛАЙД 10: Обробка помилок ===
+    # === СЛАЙД 15: Результати ===
     slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
     tf = title_box.text_frame
-    tf.text = "Обробка помилок"
+    tf.text = "🎯 Результати та досягнення"
     p = tf.paragraphs[0]
     p.font.size = Pt(40)
     p.font.bold = True
     p.font.color.rgb = DARK_BLUE
 
-    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5.5))
-    tf = content_box.text_frame
-    text = """Реалізовано комплексну систему обробки помилок:
-
-⚠️ Помилки API:
-• 401 Unauthorized → "Невірний API ключ"
-• 403 Forbidden → "Перевищено ліміт запитів"
-• Інші коди → "Помилка API: {status}"
-
-🌐 Помилки мережі:
-• Відсутність з'єднання → "Помилка мережі"
-• Timeout → "Час очікування вичерпано"
-
-✏️ Помилки валідації:
-• Порожній запит → "Введіть пошуковий запит"
-
-💾 Помилки localStorage:
-• Недоступний → "Не вдалося зберегти"
-
-Всі помилки показуються через Bootstrap Alert"""
-
-    tf.text = text
-    for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(16)
-        paragraph.font.color.rgb = DARK_GRAY
-        paragraph.space_after = Pt(10)
-
-    # === СЛАЙД 11: Результати ===
-    slide = prs.slides.add_slide(prs.slide_layouts[6])
-
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
-    tf = title_box.text_frame
-    tf.text = "Результати та досягнення"
-    p = tf.paragraphs[0]
-    p.font.size = Pt(40)
-    p.font.bold = True
-    p.font.color.rgb = DARK_BLUE
-
-    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5.5))
+    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.3), Inches(8.5), Inches(5.8))
     tf = content_box.text_frame
     text = """✅ Повністю реалізовані всі 12+ тем практики
 
@@ -471,105 +677,61 @@ state.photos = [...state.photos, ...newPhotos]
 
 ✅ Професійна обробка помилок
 
-✅ Оптимізація продуктивності (debouncing, lazy loading)
+✅ Оптимізація (debouncing, lazy loading, delegation)
 
-✅ Готовність до deployment (build configuration)"""
-
-    tf.text = text
-    for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(18)
-        paragraph.font.color.rgb = GREEN
-        paragraph.font.bold = True
-        paragraph.space_after = Pt(12)
-
-    # === СЛАЙД 12: Демонстрація ===
-    slide = prs.slides.add_slide(prs.slide_layouts[6])
-
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
-    tf = title_box.text_frame
-    tf.text = "Демонстрація застосунку"
-    p = tf.paragraphs[0]
-    p.font.size = Pt(40)
-    p.font.bold = True
-    p.font.color.rgb = DARK_BLUE
-
-    content_box = slide.shapes.add_textbox(Inches(1.5), Inches(2), Inches(7), Inches(4))
-    tf = content_box.text_frame
-    text = """🚀 Як запустити проєкт:
-
-1. git clone https://github.com/AlexBram003/Practika
-2. cd Practika
-3. npm install
-4. npm run dev
-
-📱 Відкрити: http://localhost:5173
-
-💡 Спробуйте:
-• Пошук: "nature", "city", "architecture"
-• Клік на категорію
-• Додати фото до улюблених
-• Змінити режим завантаження"""
+✅ Готовність до deployment"""
 
     tf.text = text
     for paragraph in tf.paragraphs:
         paragraph.font.size = Pt(20)
-        paragraph.font.color.rgb = DARK_GRAY
-        paragraph.space_after = Pt(14)
+        paragraph.font.color.rgb = GREEN
+        paragraph.font.bold = True
+        paragraph.space_after = Pt(12)
 
-    # === СЛАЙД 13: Висновки ===
+    # === СЛАЙД 16: Інструкція запуску ===
     slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.8))
+    title_box = slide.shapes.add_textbox(Inches(0.5), Inches(0.3), Inches(9), Inches(0.7))
     tf = title_box.text_frame
-    tf.text = "Висновки"
+    tf.text = "🚀 Як запустити проєкт"
     p = tf.paragraphs[0]
     p.font.size = Pt(40)
     p.font.bold = True
     p.font.color.rgb = DARK_BLUE
 
-    content_box = slide.shapes.add_textbox(Inches(0.8), Inches(1.5), Inches(8.5), Inches(5.5))
+    content_box = slide.shapes.add_textbox(Inches(1.5), Inches(1.8), Inches(7), Inches(4.5))
     tf = content_box.text_frame
-    text = """В результаті виконання навчальної практики:
+    text = """1️⃣ Клонування репозиторію:
+   git clone https://github.com/AlexBram003/Practika
+   cd Practika
 
-📚 Набуто практичні навички:
-• Робота з сучасними інструментами (Vite, Axios, Bootstrap)
-• Інтеграція з зовнішніми API
-• Модульна розробка JavaScript застосунків
-• Асинхронне програмування та обробка помилок
+2️⃣ Встановлення залежностей:
+   npm install
 
-💼 Професійний розвиток:
-• Створено портфоліо проєкт
-• Досвід роботи з Git/GitHub
-• Практика адаптивного дизайну
-• UX/UI best practices
+3️⃣ Запуск dev-сервера:
+   npm run dev
 
-🎯 Практична цінність:
-Проєкт демонструє готовність до реальної веб-розробки
-та може бути використаний як приклад для роботодавців"""
+4️⃣ Відкрити браузер:
+   http://localhost:5173
+
+💡 Спробуйте: пошук "nature", клік на категорію,
+   додавання до улюблених, зміна режиму завантаження"""
 
     tf.text = text
     for paragraph in tf.paragraphs:
-        paragraph.font.size = Pt(17)
+        paragraph.font.size = Pt(18)
         paragraph.font.color.rgb = DARK_GRAY
         paragraph.space_after = Pt(12)
 
-    # === СЛАЙД 14: Дякую ===
+    # === СЛАЙД 17: Дякую ===
     slide = prs.slides.add_slide(prs.slide_layouts[6])
 
-    # Фон
-    background = slide.shapes.add_shape(
-        1, 0, 0,
-        prs.slide_width, prs.slide_height
-    )
+    background = slide.shapes.add_shape(1, 0, 0, prs.slide_width, prs.slide_height)
     background.fill.solid()
     background.fill.fore_color.rgb = BLUE
     background.line.fill.background()
 
-    # Текст
-    thanks_box = slide.shapes.add_textbox(
-        Inches(1), Inches(2.5),
-        Inches(8), Inches(2)
-    )
+    thanks_box = slide.shapes.add_textbox(Inches(1), Inches(2.5), Inches(8), Inches(2))
     tf = thanks_box.text_frame
     tf.text = "Дякую за увагу!"
     p = tf.paragraphs[0]
@@ -578,11 +740,7 @@ state.photos = [...state.photos, ...newPhotos]
     p.font.color.rgb = WHITE
     p.alignment = PP_ALIGN.CENTER
 
-    # Контакти
-    contact_box = slide.shapes.add_textbox(
-        Inches(1), Inches(5),
-        Inches(8), Inches(1.5)
-    )
+    contact_box = slide.shapes.add_textbox(Inches(1), Inches(5), Inches(8), Inches(1.5))
     tf = contact_box.text_frame
     tf.text = "📧 Питання?\n\n📸 Photo Gallery - Брам Олександр, ОП-221"
     for paragraph in tf.paragraphs:
@@ -593,7 +751,10 @@ state.photos = [...state.photos, ...newPhotos]
     return prs
 
 if __name__ == "__main__":
-    print("Створення презентації...")
+    print("Створення презентації з візуальними слайдами...")
     prs = create_presentation()
     prs.save('Photo_Gallery_Презентація.pptx')
     print("✅ Презентацію збережено: Photo_Gallery_Презентація.pptx")
+    print("\n📝 ВАЖЛИВО: Додайте скріншоти сайту у слайди 2-11!")
+    print("   Відкрийте презентацію в PowerPoint та замініть сірі блоки")
+    print("   на реальні скріншоти застосунку.")
