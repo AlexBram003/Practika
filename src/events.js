@@ -22,6 +22,12 @@ export function setupSearchForm() {
     elements.allTab.classList.add('active')
     elements.favoritesTab.classList.remove('active')
 
+    // Приховати поле мінімальних лайків
+    elements.minLikesContainer.classList.add('d-none')
+
+    // Оновити UI елементів керування
+    updateLoadingModeUI()
+
     const photos = await fetchPhotos(query, 1)
     state.photos = photos
     displayPhotos(photos)
@@ -104,6 +110,9 @@ export function setupTabs() {
     // Приховати поле мінімальних лайків для вкладки "Всі фото"
     elements.minLikesContainer.classList.add('d-none')
 
+    // Показати елементи керування завантаженням для "Всі фото"
+    updateLoadingModeUI()
+
     if (state.photos.length === 0) {
       const photos = await fetchPhotos(state.currentQuery, 1)
       state.photos = photos
@@ -118,6 +127,9 @@ export function setupTabs() {
 
     // Показати поле мінімальних лайків для вкладки "Улюблені"
     elements.minLikesContainer.classList.remove('d-none')
+
+    // Приховати елементи керування завантаженням для "Улюблені"
+    updateLoadingModeUI()
 
     let favorites = getFavorites()
 
@@ -148,6 +160,12 @@ export function setupCategories() {
       elements.allTab.classList.add('active')
       elements.favoritesTab.classList.remove('active')
 
+      // Приховати поле мінімальних лайків
+      elements.minLikesContainer.classList.add('d-none')
+
+      // Оновити UI елементів керування
+      updateLoadingModeUI()
+
       const photos = await fetchPhotos(category, 1)
       state.photos = photos
       displayPhotos(photos)
@@ -156,8 +174,15 @@ export function setupCategories() {
 }
 
 function updateLoadingModeUI() {
-  if (state.currentTab !== 'all') return
+  // Для вкладки "Улюблені" приховати всі елементи керування завантаженням
+  if (state.currentTab !== 'all') {
+    elements.paginationContainer.classList.add('d-none')
+    elements.loadMoreBtn.classList.add('d-none')
+    elements.scrollHint.classList.add('d-none')
+    return
+  }
 
+  // Для вкладки "Всі фото" показувати відповідний елемент
   switch (state.loadingMode) {
     case 'pagination':
       elements.paginationContainer.classList.remove('d-none')
@@ -181,7 +206,10 @@ export function setupLoadingModeToggle() {
   elements.paginationModeBtn.addEventListener('change', () => {
     if (elements.paginationModeBtn.checked) {
       state.loadingMode = 'pagination'
-      loadPagePhotos(state.currentPage)
+      // Завантажити фото тільки якщо на вкладці "Всі фото"
+      if (state.currentTab === 'all') {
+        loadPagePhotos(state.currentPage)
+      }
       updateLoadingModeUI()
     }
   })
@@ -211,6 +239,9 @@ async function loadPagePhotos(page) {
 
 export function setupPaginationClick() {
   elements.paginationNav.addEventListener('click', async (e) => {
+    // Пагінація працює тільки для вкладки "Всі фото"
+    if (state.currentTab !== 'all') return
+
     if (e.target.classList.contains('page-link')) {
       const page = parseInt(e.target.dataset.page)
       if (page && !isNaN(page)) {
