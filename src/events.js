@@ -63,13 +63,25 @@ export function setupGalleryClick() {
 }
 
 export async function loadMorePhotos() {
-  if (state.isLoading || state.currentTab !== 'all') return
-  if (state.loadingMode === 'pagination') return 
+  if (state.isLoading) return
+  if (state.loadingMode === 'pagination') return
 
-  state.currentPage++
-  const photos = await fetchPhotos(state.currentQuery, state.currentPage)
-  state.photos = [...state.photos, ...photos]
-  displayPhotos(photos, true)
+  if (state.currentTab === 'all') {
+    // Завантажити більше фото з API
+    state.currentPage++
+    const photos = await fetchPhotos(state.currentQuery, state.currentPage)
+    state.photos = [...state.photos, ...photos]
+    displayPhotos(photos, true)
+  } else if (state.currentTab === 'favorites') {
+    // Завантажити більше улюблених локально
+    const totalPages = getFavoritesTotalPages()
+    if (state.favoritesPage >= totalPages) return // Немає більше фото
+
+    state.favoritesPage++
+    const newFavorites = getPagedFavorites(state.favoritesPage)
+    state.displayedFavorites = [...state.displayedFavorites, ...newFavorites]
+    displayPhotos(newFavorites, true)
+  }
 }
 
 export function setupLoadMoreButton() {
@@ -91,10 +103,10 @@ function handleScroll() {
   clearTimeout(scrollTimeout)
 
   scrollTimeout = setTimeout(async () => {
-    if (isBottomReached() && state.currentTab === 'all' && !state.isLoading && state.loadingMode === 'infinite') {
+    if (isBottomReached() && !state.isLoading && state.loadingMode === 'infinite') {
       await loadMorePhotos()
     }
-  }, 200) 
+  }, 200)
 }
 
 export function setupInfiniteScroll() {
@@ -128,20 +140,22 @@ export function setupTabs() {
     // Показати поле мінімальних лайків для вкладки "Улюблені"
     elements.minLikesContainer.classList.remove('d-none')
 
-    // Приховати елементи керування завантаженням для "Улюблені"
+    // Оновити елементи керування для "Улюблені"
     updateLoadingModeUI()
 
-    let favorites = getFavorites()
+    // Ініціалізація улюблених залежно від режиму
+    state.favoritesPage = 1
 
-    // Застосувати сортування
-    favorites = sortPhotos(favorites, state.sortOrder)
-
-    // Застосувати фільтр по лайках для улюблених
-    if (state.minLikes > 0) {
-      favorites = favorites.filter(photo => photo.likes >= state.minLikes)
+    if (state.loadingMode === 'pagination') {
+      // Режим пагінації - показати першу сторінку
+      const favorites = getPagedFavorites(1)
+      displayPhotos(favorites)
+    } else {
+      // Режими loadMore і infinite - показати першу порцію
+      const favorites = getPagedFavorites(1)
+      state.displayedFavorites = favorites
+      displayPhotos(favorites)
     }
-
-    displayPhotos(favorites)
   })
 }
 
@@ -174,15 +188,7 @@ export function setupCategories() {
 }
 
 function updateLoadingModeUI() {
-  // Для вкладки "Улюблені" приховати всі елементи керування завантаженням
-  if (state.currentTab !== 'all') {
-    elements.paginationContainer.classList.add('d-none')
-    elements.loadMoreBtn.classList.add('d-none')
-    elements.scrollHint.classList.add('d-none')
-    return
-  }
-
-  // Для вкладки "Всі фото" показувати відповідний елемент
+  // Показувати відповідний елемент керування для обох вкладок
   switch (state.loadingMode) {
     case 'pagination':
       elements.paginationContainer.classList.remove('d-none')
@@ -206,11 +212,14 @@ export function setupLoadingModeToggle() {
   elements.paginationModeBtn.addEventListener('change', () => {
     if (elements.paginationModeBtn.checked) {
       state.loadingMode = 'pagination'
-      // Завантажити фото тільки якщо на вкладці "Всі фото"
+      updateLoadingModeUI()
+
+      // Перезавантажити відповідно до поточної вкладки
       if (state.currentTab === 'all') {
         loadPagePhotos(state.currentPage)
+      } else if (state.currentTab === 'favorites') {
+        loadPageFavorites(state.favoritesPage)
       }
-      updateLoadingModeUI()
     }
   })
 
@@ -218,6 +227,14 @@ export function setupLoadingModeToggle() {
     if (elements.loadMoreModeBtn.checked) {
       state.loadingMode = 'loadMore'
       updateLoadingModeUI()
+
+      // Скинути на першу сторінку для режиму loadMore
+      if (state.currentTab === 'favorites') {
+        state.favoritesPage = 1
+        const favorites = getPagedFavorites(1)
+        state.displayedFavorites = favorites
+        displayPhotos(favorites)
+      }
     }
   })
 
@@ -225,6 +242,14 @@ export function setupLoadingModeToggle() {
     if (elements.infiniteScrollModeBtn.checked) {
       state.loadingMode = 'infinite'
       updateLoadingModeUI()
+
+      // Скинути на першу сторінку для режиму infinite
+      if (state.currentTab === 'favorites') {
+        state.favoritesPage = 1
+        const favorites = getPagedFavorites(1)
+        state.displayedFavorites = favorites
+        displayPhotos(favorites)
+      }
     }
   })
 }
@@ -237,15 +262,23 @@ async function loadPagePhotos(page) {
   window.scrollTo({ top: 0, behavior: 'smooth' })
 }
 
+function loadPageFavorites(page) {
+  state.favoritesPage = page
+  const favorites = getPagedFavorites(page)
+  displayPhotos(favorites)
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
 export function setupPaginationClick() {
   elements.paginationNav.addEventListener('click', async (e) => {
-    // Пагінація працює тільки для вкладки "Всі фото"
-    if (state.currentTab !== 'all') return
-
     if (e.target.classList.contains('page-link')) {
       const page = parseInt(e.target.dataset.page)
       if (page && !isNaN(page)) {
-        await loadPagePhotos(page)
+        if (state.currentTab === 'all') {
+          await loadPagePhotos(page)
+        } else if (state.currentTab === 'favorites') {
+          loadPageFavorites(page)
+        }
       }
     }
   })
@@ -273,28 +306,54 @@ function sortPhotos(photos, sortOrder) {
   return sorted
 }
 
+// Отримати відфільтровані та відсортовані улюблені
+function getFilteredFavorites() {
+  let favorites = getFavorites()
+
+  // Застосувати сортування
+  favorites = sortPhotos(favorites, state.sortOrder)
+
+  // Застосувати фільтр по лайках
+  if (state.minLikes > 0) {
+    favorites = favorites.filter(photo => photo.likes >= state.minLikes)
+  }
+
+  return favorites
+}
+
+// Отримати порцію улюблених для конкретної сторінки
+function getPagedFavorites(page) {
+  const allFavorites = getFilteredFavorites()
+  const start = (page - 1) * state.photosPerPage
+  const end = start + state.photosPerPage
+  return allFavorites.slice(start, end)
+}
+
+// Отримати загальну кількість сторінок улюблених
+function getFavoritesTotalPages() {
+  const allFavorites = getFilteredFavorites()
+  return Math.ceil(allFavorites.length / state.photosPerPage)
+}
+
 // Обробка зміни сортування
 export function setupSortFilter() {
   elements.sortOrderSelect.addEventListener('change', async () => {
     state.sortOrder = elements.sortOrderSelect.value
-    state.currentPage = 1
 
-    // Перевірити поточну вкладку
     if (state.currentTab === 'favorites') {
-      // Для улюблених - сортувати локально
-      let favorites = getFavorites()
+      // Для улюблених - оновити відповідно до режиму
+      state.favoritesPage = 1
 
-      // Застосувати сортування
-      favorites = sortPhotos(favorites, state.sortOrder)
-
-      // Застосувати фільтр по лайках якщо встановлено
-      if (state.minLikes > 0) {
-        favorites = favorites.filter(photo => photo.likes >= state.minLikes)
+      if (state.loadingMode === 'pagination') {
+        loadPageFavorites(1)
+      } else {
+        const favorites = getPagedFavorites(1)
+        state.displayedFavorites = favorites
+        displayPhotos(favorites)
       }
-
-      displayPhotos(favorites)
     } else {
       // Для "Всі фото" - перезавантажити з API з новим сортуванням
+      state.currentPage = 1
       const photos = await fetchPhotos(state.currentQuery, 1)
       state.photos = photos
       displayPhotos(photos)
@@ -314,17 +373,15 @@ export function setupLikesFilter() {
 
       // Застосувати фільтр тільки якщо відкрита вкладка "Улюблені"
       if (state.currentTab === 'favorites') {
-        let favorites = getFavorites()
+        state.favoritesPage = 1
 
-        // Застосувати сортування
-        favorites = sortPhotos(favorites, state.sortOrder)
-
-        // Застосувати фільтр по лайках
-        if (state.minLikes > 0) {
-          favorites = favorites.filter(photo => photo.likes >= state.minLikes)
+        if (state.loadingMode === 'pagination') {
+          loadPageFavorites(1)
+        } else {
+          const favorites = getPagedFavorites(1)
+          state.displayedFavorites = favorites
+          displayPhotos(favorites)
         }
-
-        displayPhotos(favorites)
       }
     }, 500) // Затримка 500мс після останнього введення
   })

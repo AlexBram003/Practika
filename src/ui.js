@@ -79,29 +79,38 @@ export function displayPhotos(photos, append = false) {
     elements.photoGallery.appendChild(photoCard)
   })
 
-  if (state.currentTab === 'all') {
-    switch (state.loadingMode) {
-      case 'pagination':
-        elements.paginationContainer.classList.remove('d-none')
-        elements.loadMoreBtn.classList.add('d-none')
-        elements.scrollHint.classList.add('d-none')
+  // Показувати елементи керування для обох вкладок
+  switch (state.loadingMode) {
+    case 'pagination':
+      elements.paginationContainer.classList.remove('d-none')
+      elements.loadMoreBtn.classList.add('d-none')
+      elements.scrollHint.classList.add('d-none')
+
+      if (state.currentTab === 'all') {
         renderPagination(state.currentPage, state.totalPages)
-        break
-      case 'loadMore':
-        elements.paginationContainer.classList.add('d-none')
-        elements.loadMoreBtn.classList.remove('d-none')
-        elements.scrollHint.classList.add('d-none')
-        break
-      case 'infinite':
-        elements.paginationContainer.classList.add('d-none')
-        elements.loadMoreBtn.classList.add('d-none')
-        elements.scrollHint.classList.remove('d-none')
-        break
-    }
-  } else {
-    elements.paginationContainer.classList.add('d-none')
-    elements.loadMoreBtn.classList.add('d-none')
-    elements.scrollHint.classList.add('d-none')
+      } else if (state.currentTab === 'favorites') {
+        // Підрахувати кількість сторінок для улюблених з врахуванням фільтрів
+        let allFavorites = getFavorites()
+
+        // Застосувати фільтр по лайках
+        if (state.minLikes > 0) {
+          allFavorites = allFavorites.filter(photo => photo.likes >= state.minLikes)
+        }
+
+        const totalFavPages = Math.max(1, Math.ceil(allFavorites.length / state.photosPerPage))
+        renderPagination(state.favoritesPage, totalFavPages)
+      }
+      break
+    case 'loadMore':
+      elements.paginationContainer.classList.add('d-none')
+      elements.loadMoreBtn.classList.remove('d-none')
+      elements.scrollHint.classList.add('d-none')
+      break
+    case 'infinite':
+      elements.paginationContainer.classList.add('d-none')
+      elements.loadMoreBtn.classList.add('d-none')
+      elements.scrollHint.classList.remove('d-none')
+      break
   }
 }
 
